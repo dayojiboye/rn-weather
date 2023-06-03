@@ -125,6 +125,7 @@ export default function Home({
 			>
 				<View style={{ paddingTop: 16, paddingHorizontal: 20, flex: 1 }}>
 					<BottomSheetTextInput
+						autoFocus
 						placeholder="Enter City"
 						placeholderTextColor="#80868b"
 						style={{
