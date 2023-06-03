@@ -4,6 +4,7 @@ import { weatherResponse } from "../types";
 import { format as formatDate } from "date-fns";
 import PressureIcon from "../../assets/icons/pressure-icon.svg";
 import HumidityIcon from "../../assets/icons/humidity-icon.svg";
+import { getWeatherIcon } from "../constants";
 
 export default function WeatherData({ data }: { data: weatherResponse | undefined }) {
 	return (
@@ -33,8 +34,9 @@ export default function WeatherData({ data }: { data: weatherResponse | undefine
 				{formatDate(new Date(), "EEEE, dd MMMM YYY")}
 			</Text>
 			<Image
-				source={{ uri: `https://openweathermap.org/img/wn/${data?.weather[0].icon}@2x.png` }}
-				style={{ height: 70, width: 70, marginTop: 101 }}
+				source={getWeatherIcon(data?.weather[0].icon)}
+				style={{ height: 150, width: 150, marginTop: 72 }}
+				resizeMode="contain"
 			/>
 			<Text
 				style={{

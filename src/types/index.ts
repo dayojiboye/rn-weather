@@ -20,7 +20,7 @@ export type weatherResponse = {
 		temp_max: number;
 		temp_min: number;
 	};
-	name?: string;
+	name: string;
 	sys: {
 		country: string;
 		sunrise: number;

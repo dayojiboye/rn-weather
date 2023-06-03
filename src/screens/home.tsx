@@ -52,6 +52,7 @@ export default function Home({
 	};
 
 	const fetchCityWeather = async () => {
+		closeBottomsheet();
 		setCurrentState(appState.LOADING);
 		try {
 			const response = await API.get(apiEndpoints.getCityWeather(city));
@@ -74,11 +75,6 @@ export default function Home({
 		setCity("");
 		bottomSheetModalRef.current?.close();
 	}, []);
-
-	const onSubmit = () => {
-		closeBottomsheet();
-		fetchCityWeather();
-	};
 
 	React.useEffect(() => {
 		// console.log(JSON.stringify(location));
@@ -103,7 +99,7 @@ export default function Home({
 
 	return (
 		<>
-			<StatusBar style="auto" />
+			<StatusBar style="light" />
 			<ImageBackground source={AppBackground} style={{ flex: 1 }}>
 				<LinearGradient
 					colors={["rgba(0, 39, 98, 0.83)", "rgba(0, 39, 98, 0.83)"]}
@@ -125,6 +121,7 @@ export default function Home({
 				snapPoints={["28%"]}
 				handleIndicatorStyle={{ backgroundColor: "#ccc", width: 40 }}
 				backdropComponent={(props) => <AppBackdrop onPress={closeBottomsheet} {...props} />}
+				containerStyle={{ borderRadius: 50 }}
 			>
 				<View style={{ paddingTop: 16, paddingHorizontal: 20, flex: 1 }}>
 					<BottomSheetTextInput
@@ -150,7 +147,7 @@ export default function Home({
 							width: "100%",
 						}}
 						labelStyle={{ color: !isSubmissionAllowed ? "#949191" : "#fff" }}
-						onPress={onSubmit}
+						onPress={fetchCityWeather}
 					/>
 				</View>
 			</BottomSheetModal>
