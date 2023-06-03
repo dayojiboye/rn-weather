@@ -1,24 +1,45 @@
-import { ActivityIndicator, ImageBackground, ScrollView, Text, View } from "react-native";
+import { ImageBackground, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import React from "react";
 import { StatusBar } from "expo-status-bar";
-import AppBackground from "../assets/images/app_background.png";
+import AppBackground from "../../assets/images/app_background.png";
 import { LinearGradient } from "expo-linear-gradient";
 import AppBar from "../components/app-bar";
 import { API } from "../config";
 import apiEndpoints from "../config/api-endpoints";
 import { weatherResponse } from "../types";
-import { format as formatDate } from "date-fns";
 import { appState } from "../enums";
 import WeatherData from "../components/weather-data";
+import { BottomSheetModal, BottomSheetTextInput } from "@gorhom/bottom-sheet";
+import AppBackdrop from "../components/app-backdrop";
+import * as Location from "expo-location";
+import LocationPermissionDenied from "../components/location-permission-denied";
+import AppProgressIndicator from "../components/app-progress-indicator";
+import WeatherError from "../components/weather-error";
+import AppButton from "../components/app-button";
 
-export default function Home() {
+export default function Home({
+	location,
+	locationErr,
+	isLocationLoading,
+}: {
+	location: Location.LocationObject | null;
+	locationErr: string | null;
+	isLocationLoading: boolean;
+}) {
+	const bottomSheetModalRef = React.useRef<BottomSheetModal>(null);
 	const [currentState, setCurrentState] = React.useState<string>(appState.IDLE);
 	const [weather, setWeather] = React.useState<weatherResponse | undefined>();
+	const [city, setCity] = React.useState<string>("");
+
+	const isSubmissionAllowed: boolean = city.length >= 2;
 
 	const fetchWeather = async () => {
+		if (!location) return;
 		setCurrentState(appState.LOADING);
 		try {
-			const response = await API.get(apiEndpoints.getWeather("lagos"));
+			const response = await API.get(
+				apiEndpoints.getWeather(location?.coords.latitude, location?.coords.longitude)
+			);
 			const { status, data } = response || {};
 			if (status === 200) {
 				setWeather(data);
@@ -30,81 +51,50 @@ export default function Home() {
 		}
 	};
 
-	React.useEffect(() => {
-		fetchWeather();
+	const fetchCityWeather = async () => {
+		setCurrentState(appState.LOADING);
+		try {
+			const response = await API.get(apiEndpoints.getCityWeather(city));
+			const { status, data } = response || {};
+			if (status === 200) {
+				setWeather(data);
+				setCurrentState(appState.SUCCESS);
+			}
+		} catch (error) {
+			console.log(error);
+			setCurrentState(appState.ERROR);
+		}
+	};
+
+	const openBottomsheet = React.useCallback(() => {
+		bottomSheetModalRef.current?.present();
 	}, []);
+
+	const closeBottomsheet = React.useCallback(() => {
+		setCity("");
+		bottomSheetModalRef.current?.close();
+	}, []);
+
+	const onSubmit = () => {
+		closeBottomsheet();
+		fetchCityWeather();
+	};
+
+	React.useEffect(() => {
+		// console.log(JSON.stringify(location));
+		if (location) fetchWeather();
+	}, [location]);
 
 	const renderView = (): JSX.Element | null => {
 		switch (currentState) {
 			case appState.LOADING:
-				return (
-					<View
-						style={{
-							position: "absolute",
-							top: 0,
-							left: 0,
-							right: 0,
-							bottom: 0,
-							justifyContent: "center",
-							alignItems: "center",
-						}}
-					>
-						<View
-							style={{
-								backgroundColor: "rgba(0, 0, 0, 0.8)",
-								width: 80,
-								height: 80,
-								alignItems: "center",
-								justifyContent: "center",
-								borderRadius: 10,
-							}}
-						>
-							<ActivityIndicator />
-						</View>
-					</View>
-				);
+				return <AppProgressIndicator />;
 
 			case appState.ERROR:
-				return (
-					<View
-						style={{
-							position: "absolute",
-							top: 0,
-							left: 0,
-							right: 0,
-							bottom: 0,
-							justifyContent: "center",
-							alignItems: "center",
-						}}
-					>
-						<Text
-							style={{
-								color: "white",
-								fontFamily: "sfMedium",
-								fontSize: 20,
-								textAlign: "center",
-								lineHeight: 32,
-							}}
-						>
-							{"Please enter a valid city! \n 🧐"}
-						</Text>
-					</View>
-				);
+				return <WeatherError />;
 
 			case appState.SUCCESS:
-				return (
-					<ScrollView
-						style={{ flex: 1 }}
-						contentContainerStyle={{
-							flex: 1,
-							paddingVertical: 64,
-							paddingHorizontal: 16,
-							alignItems: "center",
-						}}
-					>
-						<WeatherData data={weather} />
-					</ScrollView>
-				);
+				return <WeatherData data={weather} />;
 
 			default:
 				return null;
@@ -116,13 +106,54 @@ export default function Home() {
 			<StatusBar style="auto" />
 			<ImageBackground source={AppBackground} style={{ flex: 1 }}>
 				<LinearGradient
-					colors={["rgba(0, 39, 98, 0.75)", "rgba(0, 39, 98, 0.83)"]}
+					colors={["rgba(0, 39, 98, 0.83)", "rgba(0, 39, 98, 0.83)"]}
 					style={{ flex: 1, position: "relative" }}
 				>
-					<AppBar />
-					{renderView()}
+					<AppBar disabled={isLocationLoading} openBottomsheet={openBottomsheet} />
+					{isLocationLoading ? (
+						<AppProgressIndicator />
+					) : location || currentState !== appState.IDLE ? (
+						renderView()
+					) : (
+						<LocationPermissionDenied locationErr={locationErr} />
+					)}
 				</LinearGradient>
 			</ImageBackground>
+			<BottomSheetModal
+				ref={bottomSheetModalRef}
+				index={0}
+				snapPoints={["28%"]}
+				handleIndicatorStyle={{ backgroundColor: "#ccc", width: 40 }}
+				backdropComponent={(props) => <AppBackdrop onPress={closeBottomsheet} {...props} />}
+			>
+				<View style={{ paddingTop: 16, paddingHorizontal: 20, flex: 1 }}>
+					<BottomSheetTextInput
+						placeholder="Enter City"
+						placeholderTextColor="#80868b"
+						style={{
+							fontSize: 16,
+							paddingHorizontal: 16,
+							paddingVertical: 20,
+							backgroundColor: "#f3f0f0",
+							borderRadius: 8,
+						}}
+						onChangeText={(value) => setCity(value)}
+					/>
+					<AppButton
+						label="Get Weather"
+						disabled={!isSubmissionAllowed}
+						activeOpacity={0.8}
+						style={{
+							marginTop: 16,
+							backgroundColor: !isSubmissionAllowed ? "#eee" : "#000",
+							height: 60,
+							width: "100%",
+						}}
+						labelStyle={{ color: !isSubmissionAllowed ? "#949191" : "#fff" }}
+						onPress={onSubmit}
+					/>
+				</View>
+			</BottomSheetModal>
 		</>
 	);
 }

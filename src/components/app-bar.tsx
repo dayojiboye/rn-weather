@@ -3,7 +3,13 @@ import React from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import FIcons from "@expo/vector-icons/Fontisto";
 
-export default function AppBar() {
+export default function AppBar({
+	disabled,
+	openBottomsheet,
+}: {
+	disabled?: boolean;
+	openBottomsheet: () => void;
+}) {
 	const insets = useSafeAreaInsets();
 
 	return (
@@ -15,10 +21,13 @@ export default function AppBar() {
 				flexDirection: "row",
 				justifyContent: "space-between",
 				alignItems: "center",
+				position: "relative",
+				zIndex: 4,
 			}}
 		>
-			{/* Opens up a bottom sheet for searching city's weather */}
 			<TouchableOpacity
+				onPress={openBottomsheet}
+				disabled={disabled}
 				style={{
 					width: 32,
 					height: 32,
@@ -31,6 +40,7 @@ export default function AppBar() {
 
 			{/* Toggles theme mode */}
 			<TouchableOpacity
+				disabled={disabled}
 				style={{
 					width: 32,
 					height: 32,
