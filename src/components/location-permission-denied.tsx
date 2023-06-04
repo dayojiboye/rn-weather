@@ -1,10 +1,15 @@
 import { View, Text, Linking, NativeModules, Platform, ScrollView } from "react-native";
 import React from "react";
 import AppButton from "./app-button";
+import useTheme from "../hooks/useTheme";
+import themeConfig from "../config/theme";
 
 const { RNAndroidOpenSettings } = NativeModules;
 
 export default function LocationPermissionDenied({ locationErr }: { locationErr: string | null }) {
+	const appTheme = useTheme();
+	const theme = themeConfig(appTheme.theme);
+
 	const openAppSettings = () => {
 		if (Platform.OS === "ios") {
 			Linking.openURL("app-settings:");
@@ -33,7 +38,7 @@ export default function LocationPermissionDenied({ locationErr }: { locationErr:
 			<Text
 				style={{
 					fontSize: 18,
-					color: "#fff",
+					color: theme.white,
 					lineHeight: 32,
 					fontFamily: "sfSemiBold",
 					textAlign: "center",
@@ -43,8 +48,8 @@ export default function LocationPermissionDenied({ locationErr }: { locationErr:
 			</Text>
 			<AppButton
 				label="Go to Settings"
-				style={{ backgroundColor: "#fff", marginTop: 32, width: 150 }}
-				labelStyle={{ color: "#000" }}
+				style={{ backgroundColor: theme.primary, marginTop: 32, width: 150 }}
+				labelStyle={{ color: theme.secondary }}
 				onPress={openAppSettings}
 			/>
 		</ScrollView>

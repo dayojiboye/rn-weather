@@ -2,6 +2,9 @@ import { TouchableOpacity, View } from "react-native";
 import React from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import FIcons from "@expo/vector-icons/Fontisto";
+import useTheme from "../hooks/useTheme";
+import { themeMode } from "../enums";
+import themeConfig from "../config/theme";
 
 export default function AppBar({
 	disabled,
@@ -11,6 +14,7 @@ export default function AppBar({
 	openBottomsheet: () => void;
 }) {
 	const insets = useSafeAreaInsets();
+	const appTheme = useTheme();
 
 	return (
 		<View
@@ -26,8 +30,16 @@ export default function AppBar({
 			}}
 		>
 			<AppBarButton onPress={openBottomsheet} disabled={disabled} iconName="search" />
-			{/* Toggles theme mode */}
-			<AppBarButton onPress={() => {}} disabled={disabled} iconName="night-clear" />
+			<AppBarButton
+				onPress={() => {
+					appTheme.toggleTheme(
+						appTheme.theme === themeMode.DARK ? themeMode.LIGHT : themeMode.DARK
+					);
+				}}
+				disabled={disabled}
+				iconName={appTheme.theme === themeMode.DARK ? "day-sunny" : "night-clear"}
+				size={appTheme.theme === themeMode.DARK ? 32 : 28}
+			/>
 		</View>
 	);
 }
@@ -35,12 +47,17 @@ export default function AppBar({
 const AppBarButton = ({
 	disabled,
 	iconName,
+	size = 26,
 	onPress,
 }: {
 	disabled?: boolean;
 	iconName: any;
+	size?: number;
 	onPress: () => void;
 }) => {
+	const appTheme = useTheme();
+	const theme = themeConfig(appTheme.theme);
+
 	return (
 		<TouchableOpacity
 			disabled={disabled}
@@ -52,7 +69,7 @@ const AppBarButton = ({
 			}}
 			onPress={onPress}
 		>
-			<FIcons name={iconName} color="white" size={26} />
+			<FIcons name={iconName} color={theme.white} size={size} />
 		</TouchableOpacity>
 	);
 };

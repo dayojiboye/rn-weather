@@ -16,6 +16,8 @@ import LocationPermissionDenied from "../components/location-permission-denied";
 import AppProgressIndicator from "../components/app-progress-indicator";
 import WeatherError from "../components/weather-error";
 import AppButton from "../components/app-button";
+import useTheme from "../hooks/useTheme";
+import themeConfig from "../config/theme";
 
 export default function Home({
 	location,
@@ -30,6 +32,8 @@ export default function Home({
 	const [currentState, setCurrentState] = React.useState<string>(appState.IDLE);
 	const [weather, setWeather] = React.useState<weatherResponse | undefined>();
 	const [city, setCity] = React.useState<string>("");
+	const appTheme = useTheme();
+	const theme = themeConfig(appTheme.theme);
 
 	const isSubmissionAllowed: boolean = city.trim().length >= 2;
 
@@ -74,6 +78,7 @@ export default function Home({
 
 	const closeBottomsheet = React.useCallback(() => {
 		setCity("");
+		Keyboard.dismiss();
 		bottomSheetModalRef.current?.close();
 	}, []);
 
@@ -103,7 +108,7 @@ export default function Home({
 			<StatusBar style="light" />
 			<ImageBackground source={AppBackground} style={{ flex: 1 }}>
 				<LinearGradient
-					colors={["rgba(0, 39, 98, 0.83)", "rgba(0, 39, 98, 0.83)"]}
+					colors={[theme.background, theme.background]}
 					style={{ flex: 1, position: "relative" }}
 				>
 					<AppBar disabled={isLocationLoading} openBottomsheet={openBottomsheet} />
@@ -120,19 +125,19 @@ export default function Home({
 				ref={bottomSheetModalRef}
 				index={0}
 				snapPoints={["28%"]}
-				handleIndicatorStyle={{ backgroundColor: "#ccc", width: 40 }}
+				handleIndicatorStyle={{ backgroundColor: theme.faded, width: 40 }}
 				backdropComponent={(props) => <AppBackdrop onPress={closeBottomsheet} {...props} />}
 			>
 				<View style={{ paddingTop: 16, paddingHorizontal: 20, flex: 1 }}>
 					<BottomSheetTextInput
 						autoFocus
 						placeholder="Enter City"
-						placeholderTextColor="#80868b"
+						placeholderTextColor={theme.placeholder}
 						style={{
 							fontSize: 16,
 							paddingHorizontal: 16,
 							paddingVertical: 20,
-							backgroundColor: "#f3f0f0",
+							backgroundColor: theme.inputBg,
 							borderRadius: 50,
 						}}
 						onChangeText={(value) => setCity(value)}
@@ -143,11 +148,11 @@ export default function Home({
 						activeOpacity={0.8}
 						style={{
 							marginTop: 16,
-							backgroundColor: !isSubmissionAllowed ? "#eee" : "#000",
+							backgroundColor: !isSubmissionAllowed ? theme.muted : theme.black,
 							height: 60,
 							width: "100%",
 						}}
-						labelStyle={{ color: !isSubmissionAllowed ? "#949191" : "#fff" }}
+						labelStyle={{ color: !isSubmissionAllowed ? theme.disabled : theme.white }}
 						onPress={fetchCityWeather}
 					/>
 				</View>

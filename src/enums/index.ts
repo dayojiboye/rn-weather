@@ -4,3 +4,8 @@ export enum appState {
 	SUCCESS = "SUCCESS",
 	ERROR = "ERROR",
 }
+
+export enum themeMode {
+	LIGHT = "LIGHT",
+	DARK = "DARK",
+}

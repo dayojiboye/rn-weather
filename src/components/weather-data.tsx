@@ -6,8 +6,13 @@ import PressureIcon from "../../assets/icons/pressure-icon.svg";
 import HumidityIcon from "../../assets/icons/humidity-icon.svg";
 import { getWeatherIcon } from "../constants";
 import { SvgProps } from "react-native-svg";
+import useTheme from "../hooks/useTheme";
+import themeConfig from "../config/theme";
 
 export default function WeatherData({ data }: { data: weatherResponse | undefined }) {
+	const appTheme = useTheme();
+	const theme = themeConfig(appTheme.theme);
+
 	return (
 		<ScrollView
 			style={{ flex: 1 }}
@@ -22,7 +27,7 @@ export default function WeatherData({ data }: { data: weatherResponse | undefine
 				style={{
 					fontFamily: "sfBold",
 					fontSize: 32,
-					color: "white",
+					color: theme.white,
 					lineHeight: 38.9,
 					textAlign: "center",
 				}}
@@ -30,7 +35,13 @@ export default function WeatherData({ data }: { data: weatherResponse | undefine
 				{data?.name}, {data?.sys.country}
 			</Text>
 			<Text
-				style={{ fontFamily: "sf", fontSize: 16, marginTop: 4, color: "#fff", textAlign: "center" }}
+				style={{
+					fontFamily: "sf",
+					fontSize: 16,
+					marginTop: 4,
+					color: theme.white,
+					textAlign: "center",
+				}}
 			>
 				{formatDate(new Date(), "EEEE, dd MMMM YYY")}
 			</Text>
@@ -43,7 +54,7 @@ export default function WeatherData({ data }: { data: weatherResponse | undefine
 				style={{
 					fontSize: 56,
 					fontFamily: "sfBold",
-					color: "#fff",
+					color: theme.white,
 					marginVertical: 18,
 					textAlign: "center",
 				}}
@@ -54,7 +65,7 @@ export default function WeatherData({ data }: { data: weatherResponse | undefine
 			<Text
 				style={{
 					textAlign: "center",
-					color: "#fff",
+					color: theme.white,
 					fontSize: 16,
 					fontFamily: "sf",
 					textTransform: "capitalize",
@@ -86,11 +97,17 @@ const MoreInfo = ({
 	style?: StyleProp<ViewStyle>;
 	icon: React.FC<SvgProps>;
 }) => {
+	const appTheme = useTheme();
+	const theme = themeConfig(appTheme.theme);
+
 	const Icon = icon;
+
 	return (
 		<View style={[{ flexDirection: "row", alignItems: "center" }, style]}>
 			<Icon />
-			<Text style={{ color: "#fff", fontSize: 12, fontFamily: "sf", marginLeft: 8 }}>{text}</Text>
+			<Text style={{ color: theme.white, fontSize: 12, fontFamily: "sf", marginLeft: 8 }}>
+				{text}
+			</Text>
 		</View>
 	);
 };

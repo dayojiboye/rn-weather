@@ -1,7 +1,12 @@
 import { View, Text } from "react-native";
 import React from "react";
+import useTheme from "../hooks/useTheme";
+import themeConfig from "../config/theme";
 
 export default function WeatherError() {
+	const appTheme = useTheme();
+	const theme = themeConfig(appTheme.theme);
+
 	return (
 		<View
 			style={{
@@ -16,7 +21,7 @@ export default function WeatherError() {
 		>
 			<Text
 				style={{
-					color: "white",
+					color: theme.white,
 					fontFamily: "sfMedium",
 					fontSize: 20,
 					textAlign: "center",

@@ -1,3 +1,5 @@
+import { themeMode } from "../enums";
+
 export type weatherResponse = {
 	base: string;
 	clouds: {
@@ -41,4 +43,9 @@ export type weatherResponse = {
 		gust: number;
 		speed: number;
 	};
+};
+
+export type ThemeContextValue = {
+	theme: string;
+	toggleTheme: (value: string) => void;
 };

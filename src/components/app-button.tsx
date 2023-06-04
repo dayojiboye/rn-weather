@@ -7,6 +7,8 @@ import {
 	TextStyle,
 } from "react-native";
 import React from "react";
+import useTheme from "../hooks/useTheme";
+import themeConfig from "../config/theme";
 
 type Props = {
 	disabled?: boolean;
@@ -26,13 +28,16 @@ export default function AppButton({
 	onPress,
 	...props
 }: Props) {
+	const appTheme = useTheme();
+	const theme = themeConfig(appTheme.theme);
+
 	return (
 		<TouchableOpacity
 			activeOpacity={activeOpacity}
 			disabled={disabled}
 			style={[
 				{
-					backgroundColor: "#000",
+					backgroundColor: theme.secondary,
 					borderRadius: 50,
 					width: 200,
 					height: 50,
@@ -44,7 +49,7 @@ export default function AppButton({
 			onPress={onPress}
 			{...props}
 		>
-			<Text style={[{ fontSize: 18, color: "#fff", fontFamily: "sfMedium" }, labelStyle]}>
+			<Text style={[{ fontSize: 18, color: theme.primary, fontFamily: "sfMedium" }, labelStyle]}>
 				{label}
 			</Text>
 		</TouchableOpacity>

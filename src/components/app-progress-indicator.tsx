@@ -1,7 +1,12 @@
 import { View, ActivityIndicator } from "react-native";
 import React from "react";
+import useTheme from "../hooks/useTheme";
+import themeConfig from "../config/theme";
 
 export default function AppProgressIndicator() {
+	const appTheme = useTheme();
+	const theme = themeConfig(appTheme.theme);
+
 	return (
 		<View
 			style={{
@@ -17,7 +22,7 @@ export default function AppProgressIndicator() {
 		>
 			<View
 				style={{
-					backgroundColor: "rgba(0, 0, 0, 0.8)",
+					backgroundColor: theme.progressBg,
 					width: 80,
 					height: 80,
 					alignItems: "center",

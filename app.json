@@ -6,7 +6,7 @@
 		"owner": "mrdope",
 		"orientation": "portrait",
 		"icon": "./assets/app-icon.jpg",
-		"userInterfaceStyle": "light",
+		"userInterfaceStyle": "automatic",
 		"splash": {
 			"image": "./assets/app-splash.png",
 			"resizeMode": "contain",
