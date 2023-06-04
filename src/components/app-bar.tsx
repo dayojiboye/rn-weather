@@ -25,31 +25,34 @@ export default function AppBar({
 				zIndex: 4,
 			}}
 		>
-			<TouchableOpacity
-				onPress={openBottomsheet}
-				disabled={disabled}
-				style={{
-					width: 32,
-					height: 32,
-					alignItems: "center",
-					justifyContent: "center",
-				}}
-			>
-				<FIcons name="search" color="white" size={26} />
-			</TouchableOpacity>
-
+			<AppBarButton onPress={openBottomsheet} disabled={disabled} iconName="search" />
 			{/* Toggles theme mode */}
-			<TouchableOpacity
-				disabled={disabled}
-				style={{
-					width: 32,
-					height: 32,
-					alignItems: "center",
-					justifyContent: "center",
-				}}
-			>
-				<FIcons name="night-clear" color="white" size={26} />
-			</TouchableOpacity>
+			<AppBarButton onPress={() => {}} disabled={disabled} iconName="night-clear" />
 		</View>
 	);
 }
+
+const AppBarButton = ({
+	disabled,
+	iconName,
+	onPress,
+}: {
+	disabled?: boolean;
+	iconName: any;
+	onPress: () => void;
+}) => {
+	return (
+		<TouchableOpacity
+			disabled={disabled}
+			style={{
+				width: 32,
+				height: 32,
+				alignItems: "center",
+				justifyContent: "center",
+			}}
+			onPress={onPress}
+		>
+			<FIcons name={iconName} color="white" size={26} />
+		</TouchableOpacity>
+	);
+};

@@ -33,7 +33,7 @@ export default function AppButton({
 			style={[
 				{
 					backgroundColor: "#000",
-					borderRadius: 8,
+					borderRadius: 50,
 					width: 200,
 					height: 50,
 					alignItems: "center",

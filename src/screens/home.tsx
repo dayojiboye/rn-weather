@@ -31,7 +31,7 @@ export default function Home({
 	const [weather, setWeather] = React.useState<weatherResponse | undefined>();
 	const [city, setCity] = React.useState<string>("");
 
-	const isSubmissionAllowed: boolean = city.length >= 2;
+	const isSubmissionAllowed: boolean = city.trim().length >= 2;
 
 	const fetchWeather = async () => {
 		if (!location) return;
@@ -55,7 +55,7 @@ export default function Home({
 		closeBottomsheet();
 		setCurrentState(appState.LOADING);
 		try {
-			const response = await API.get(apiEndpoints.getCityWeather(city));
+			const response = await API.get(apiEndpoints.getCityWeather(city.trim()));
 			const { status, data } = response || {};
 			if (status === 200) {
 				setWeather(data);
@@ -121,7 +121,6 @@ export default function Home({
 				snapPoints={["28%"]}
 				handleIndicatorStyle={{ backgroundColor: "#ccc", width: 40 }}
 				backdropComponent={(props) => <AppBackdrop onPress={closeBottomsheet} {...props} />}
-				containerStyle={{ borderRadius: 50 }}
 			>
 				<View style={{ paddingTop: 16, paddingHorizontal: 20, flex: 1 }}>
 					<BottomSheetTextInput
@@ -133,7 +132,7 @@ export default function Home({
 							paddingHorizontal: 16,
 							paddingVertical: 20,
 							backgroundColor: "#f3f0f0",
-							borderRadius: 8,
+							borderRadius: 50,
 						}}
 						onChangeText={(value) => setCity(value)}
 					/>
