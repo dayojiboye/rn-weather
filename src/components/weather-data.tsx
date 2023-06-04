@@ -1,10 +1,11 @@
-import { Text, ScrollView, Image, View } from "react-native";
+import { Text, ScrollView, Image, View, ViewStyle, StyleProp } from "react-native";
 import React from "react";
 import { weatherResponse } from "../types";
 import { format as formatDate } from "date-fns";
 import PressureIcon from "../../assets/icons/pressure-icon.svg";
 import HumidityIcon from "../../assets/icons/humidity-icon.svg";
 import { getWeatherIcon } from "../constants";
+import { SvgProps } from "react-native-svg";
 
 export default function WeatherData({ data }: { data: weatherResponse | undefined }) {
 	return (
@@ -69,30 +70,27 @@ export default function WeatherData({ data }: { data: weatherResponse | undefine
 					marginTop: 18,
 				}}
 			>
-				<View
-					style={{
-						flexDirection: "row",
-						alignItems: "center",
-						marginRight: 40,
-					}}
-				>
-					<PressureIcon />
-					<Text style={{ color: "#fff", fontSize: 12, fontFamily: "sf", marginLeft: 8 }}>
-						{data?.main.pressure}
-					</Text>
-				</View>
-				<View
-					style={{
-						flexDirection: "row",
-						alignItems: "center",
-					}}
-				>
-					<HumidityIcon />
-					<Text style={{ color: "#fff", fontSize: 12, fontFamily: "sf", marginLeft: 8 }}>
-						{data?.main.humidity}
-					</Text>
-				</View>
+				<MoreInfo text={data?.main.pressure} icon={PressureIcon} style={{ marginRight: 40 }} />
+				<MoreInfo text={data?.main.humidity} icon={HumidityIcon} />
 			</View>
 		</ScrollView>
 	);
 }
+
+const MoreInfo = ({
+	text,
+	style,
+	icon,
+}: {
+	text?: number;
+	style?: StyleProp<ViewStyle>;
+	icon: React.FC<SvgProps>;
+}) => {
+	const Icon = icon;
+	return (
+		<View style={[{ flexDirection: "row", alignItems: "center" }, style]}>
+			<Icon />
+			<Text style={{ color: "#fff", fontSize: 12, fontFamily: "sf", marginLeft: 8 }}>{text}</Text>
+		</View>
+	);
+};
