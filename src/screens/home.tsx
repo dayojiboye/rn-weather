@@ -1,4 +1,4 @@
-import { ImageBackground, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { ImageBackground, View, Keyboard } from "react-native";
 import React from "react";
 import { StatusBar } from "expo-status-bar";
 import AppBackground from "../../assets/images/app_background.png";
@@ -46,12 +46,13 @@ export default function Home({
 				setCurrentState(appState.SUCCESS);
 			}
 		} catch (error) {
-			console.log(error);
+			__DEV__ && console.log(error);
 			setCurrentState(appState.ERROR);
 		}
 	};
 
 	const fetchCityWeather = async () => {
+		Keyboard.dismiss();
 		closeBottomsheet();
 		setCurrentState(appState.LOADING);
 		try {
@@ -62,7 +63,7 @@ export default function Home({
 				setCurrentState(appState.SUCCESS);
 			}
 		} catch (error) {
-			console.log(error);
+			__DEV__ && console.log(error);
 			setCurrentState(appState.ERROR);
 		}
 	};
