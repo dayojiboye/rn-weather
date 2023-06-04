@@ -3,6 +3,7 @@
 		"name": "rn-weather",
 		"slug": "rn-weather",
 		"version": "1.0.0",
+		"owner": "mrdope",
 		"orientation": "portrait",
 		"icon": "./assets/app-icon.jpg",
 		"userInterfaceStyle": "light",
