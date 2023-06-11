@@ -2,7 +2,7 @@ import React from "react";
 import { ThemeContextValue } from "../types";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const storeData = async (value: string) => {
+const _storeUserPreferredTheme = async (value: string) => {
 	try {
 		await AsyncStorage.setItem("theme", value);
 	} catch (err) {
@@ -37,7 +37,7 @@ function ThemeProvider(props: React.PropsWithChildren<{}>) {
 	const value: ThemeContextValue = React.useMemo(() => {
 		const toggleTheme = (value: string) => {
 			dispatch({ type: "toggle_theme", payload: value });
-			storeData(value);
+			_storeUserPreferredTheme(value);
 		};
 
 		return {

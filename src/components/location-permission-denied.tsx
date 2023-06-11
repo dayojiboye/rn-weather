@@ -33,6 +33,7 @@ export default function LocationPermissionDenied({ locationErr }: { locationErr:
 				flex: 1,
 				alignItems: "center",
 				justifyContent: "center",
+				paddingHorizontal: 16,
 			}}
 		>
 			<Text
@@ -47,8 +48,8 @@ export default function LocationPermissionDenied({ locationErr }: { locationErr:
 				{locationErr || "Permission to access location was denied"}
 			</Text>
 			<AppButton
-				label="Go to Settings"
-				style={{ backgroundColor: theme.primary, marginTop: 32, width: 150 }}
+				label="Enable location access"
+				style={{ backgroundColor: theme.primary, marginTop: 32, width: "100%" }}
 				labelStyle={{ color: theme.secondary }}
 				onPress={openAppSettings}
 			/>

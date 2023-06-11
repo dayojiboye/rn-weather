@@ -26,7 +26,7 @@ export default function AppEntry() {
 		__DEV__ && console.log(status);
 		if (status !== "granted") {
 			setErrorMsg(
-				`Permission to access location was denied.\nGrant rn-weather permission to get current weather of your city.
+				`Location permission is off.\nEnable device location to get current weather of your city.
 				\nOr you could search for a city.`
 			);
 			setIsLoadingLocation(false);
